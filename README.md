@@ -153,19 +153,33 @@ GET /api/analytics/fraud-count
 
 ---
 
-# 📸 Screenshots
+## 🏠 Home Page
 
-## Login Page
-(Add screenshot here)
+![Home Page](./screenshots/home.png)
 
-## Dashboard
-(Add screenshot here)
+---
 
-## Transactions Page
-(Add screenshot here)
+## 🔐 Login Page
 
-## Analytics Page
-(Add screenshot here)
+![Login Page](./screenshots/login.png)
+
+---
+
+## 📊 Dashboard
+
+![Dashboard](./screenshots/dashboard.png)
+
+---
+
+## 💳 Transactions Page
+
+![Transactions](./screenshots/transactions.png)
+
+---
+
+## 📈 Analytics Page
+
+![Analytics](./screenshots/analytics.png)
 
 ---
 
