@@ -1,145 +1,243 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import Sidebar from "../layout/Sidebar";
+
+import Chart from "react-apexcharts";
 
 import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  ResponsiveContainer
-} from "recharts";
-
-import Sidebar from "../layout/Sidebar";
-import Navbar from "../layout/Navbar";
+  FaShieldAlt,
+  FaChartLine,
+  FaRobot,
+  FaArrowUp
+} from "react-icons/fa";
 
 function Analytics() {
 
-  const [fraudCount, setFraudCount] = useState(0);
+  const lineOptions = {
+    chart: {
+      toolbar: { show: false },
+      background: "transparent"
+    },
 
-  useEffect(() => {
+    theme: {
+      mode: "dark"
+    },
 
-  const fetchData = async () => {
+    stroke: {
+      curve: "smooth",
+      width: 4
+    },
 
-    try {
+    colors: ["#38bdf8"],
 
-      const token = localStorage.getItem("token");
+    xaxis: {
+      categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    },
 
-      const res = await axios.get(
-        "https://finguard-ai-r2ux.onrender.com/api/analytics/fraud-count",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
-
-      setFraudCount(res.data.fraudTransactions);
-
-    } catch (err) {
-
-      console.log(err);
-
+    grid: {
+      borderColor: "#1e293b"
     }
-
   };
 
-  // FIRST FETCH
-  fetchData();
-
-  // AUTO REFRESH EVERY 3 SECONDS
-  const interval = setInterval(fetchData, 3000);
-
-  // CLEANUP
-  return () => clearInterval(interval);
-
-}, []);
-
-  const data = [
-    { name: "Fraud", value: fraudCount },
-    { name: "Safe", value: 10 }
+  const lineSeries = [
+    {
+      name: "Fraud Cases",
+      data: [12, 18, 10, 28, 19, 35, 25]
+    }
   ];
 
-  const COLORS = ["#ef4444", "#22c55e"];
+  const donutOptions = {
+    labels: ["Safe", "Fraud"],
+    colors: ["#22c55e", "#ef4444"],
+
+    legend: {
+      labels: {
+        colors: "#fff"
+      }
+    },
+
+    theme: {
+      mode: "dark"
+    }
+  };
+
+  const donutSeries = [82, 18];
 
   return (
 
-    <div style={{ display: "flex" }}>
+    <div className="flex bg-slate-950 min-h-screen text-white">
 
       <Sidebar />
 
-      <div
-        style={{
-          marginLeft: window.innerWidth < 768 ? "0px" : "240px",
-          padding: "30px",
-          width: "100%",
-          minHeight: "100vh",
-          background: "#020617",
-          color: "white"
-        }}
-      >
+      <div className="flex-1 ml-[240px] p-8">
 
-        <Navbar />
+        {/* HEADER */}
 
-        <h1 style={{ fontSize: "38px" }}>
-          Analytics 📈
-        </h1>
+        <div className="flex justify-between items-center mb-10">
 
-        <p style={{ color: "#94a3b8" }}>
-          AI-powered fraud insights and monitoring
-        </p>
+          <div>
 
-        <div style={chartBox}>
+            <h1 className="text-4xl font-bold">
+              Analytics
+            </h1>
 
-          <h2>Fraud Distribution</h2>
+            <p className="text-slate-400 mt-2">
+              AI-powered fraud insights & monitoring
+            </p>
 
-          <ResponsiveContainer width="100%" height={350}>
+          </div>
 
-            <PieChart>
+          <div className="bg-slate-900 border border-slate-800 px-5 py-3 rounded-2xl">
 
-              <Pie
-                data={data}
-                cx="50%"
-                cy="50%"
-                outerRadius={120}
-                dataKey="value"
-                label
-              >
+            <p className="text-slate-400 text-sm">
+              AI Engine
+            </p>
 
-                {
-                  data.map((entry, index) => (
+            <h3 className="text-green-400 font-bold">
+              Running Smoothly
+            </h3>
 
-                    <Cell
-                      key={index}
-                      fill={COLORS[index]}
-                    />
-
-                  ))
-                }
-
-              </Pie>
-
-              <Tooltip />
-
-            </PieChart>
-
-          </ResponsiveContainer>
+          </div>
 
         </div>
 
-        <div style={insightBox}>
+        {/* STATS */}
 
-          <h2>AI Risk Insights 🤖</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
 
-          <div style={insight}>
-            🚨 High-value transactions increased today
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 hover:scale-105 transition duration-300">
+
+            <div className="flex justify-between items-center">
+
+              <div>
+
+                <p className="text-slate-400">
+                  Fraud Detected
+                </p>
+
+                <h2 className="text-4xl font-bold mt-2">
+                  128
+                </h2>
+
+              </div>
+
+              <FaShieldAlt className="text-red-400 text-4xl" />
+
+            </div>
+
+            <div className="mt-4 flex items-center gap-2 text-red-400">
+              <FaArrowUp />
+              +12% increase
+            </div>
+
           </div>
 
-          <div style={insight}>
-            🔐 Multiple suspicious login attempts detected
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 hover:scale-105 transition duration-300">
+
+            <div className="flex justify-between items-center">
+
+              <div>
+
+                <p className="text-slate-400">
+                  AI Accuracy
+                </p>
+
+                <h2 className="text-4xl font-bold mt-2">
+                  98%
+                </h2>
+
+              </div>
+
+              <FaRobot className="text-cyan-400 text-4xl" />
+
+            </div>
+
+            <div className="mt-4 flex items-center gap-2 text-green-400">
+              <FaArrowUp />
+              Optimized model
+            </div>
+
           </div>
 
-          <div style={insight}>
-            📊 Current fraud risk level is low
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 hover:scale-105 transition duration-300">
+
+            <div className="flex justify-between items-center">
+
+              <div>
+
+                <p className="text-slate-400">
+                  Risk Score
+                </p>
+
+                <h2 className="text-4xl font-bold mt-2">
+                  Low
+                </h2>
+
+              </div>
+
+              <FaChartLine className="text-green-400 text-4xl" />
+
+            </div>
+
+            <div className="mt-4 flex items-center gap-2 text-green-400">
+              <FaArrowUp />
+              System stable
+            </div>
+
+          </div>
+
+        </div>
+
+        {/* CHARTS */}
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+          {/* LINE CHART */}
+
+          <div className="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-3xl p-6">
+
+            <div className="mb-6">
+
+              <h2 className="text-2xl font-bold">
+                Fraud Trends
+              </h2>
+
+              <p className="text-slate-400">
+                Weekly detection analytics
+              </p>
+
+            </div>
+
+            <Chart
+              options={lineOptions}
+              series={lineSeries}
+              type="area"
+              height={320}
+            />
+
+          </div>
+
+          {/* DONUT CHART */}
+
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6">
+
+            <div className="mb-6">
+
+              <h2 className="text-2xl font-bold">
+                Fraud Ratio
+              </h2>
+
+              <p className="text-slate-400">
+                Safe vs Fraud transactions
+              </p>
+
+            </div>
+
+            <Chart
+              options={donutOptions}
+              series={donutSeries}
+              type="donut"
+              height={320}
+            />
+
           </div>
 
         </div>
@@ -147,39 +245,7 @@ function Analytics() {
       </div>
 
     </div>
-
   );
 }
-
-const chartBox = {
-
-  marginTop: "40px",
-  background: "rgba(255,255,255,0.05)",
-  border: "1px solid rgba(255,255,255,0.08)",
-  padding: "25px",
-  borderRadius: "20px",
-  backdropFilter: "blur(12px)"
-
-};
-
-const insightBox = {
-
-  marginTop: "40px",
-  background: "rgba(255,255,255,0.05)",
-  border: "1px solid rgba(255,255,255,0.08)",
-  padding: "25px",
-  borderRadius: "20px",
-  backdropFilter: "blur(12px)"
-
-};
-
-const insight = {
-
-  background: "#1e293b",
-  padding: "15px",
-  borderRadius: "12px",
-  marginTop: "15px"
-
-};
 
 export default Analytics;

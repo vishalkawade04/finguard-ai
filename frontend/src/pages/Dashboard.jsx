@@ -1,252 +1,231 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-
-import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  ResponsiveContainer
-} from "recharts";
-
-import {
-  FiAlertTriangle,
-  FiDollarSign,
-  FiShield
-} from "react-icons/fi";
-
 import Sidebar from "../layout/Sidebar";
-import Navbar from "../layout/Navbar";
+import {
+  FaArrowUp,
+  FaShieldAlt,
+  FaWallet,
+  FaChartLine
+} from "react-icons/fa";
+
+import Chart from "react-apexcharts";
 
 function Dashboard() {
 
-  const [fraudCount, setFraudCount] = useState(0);
+  const chartOptions = {
+    chart: {
+      toolbar: { show: false },
+      background: "transparent"
+    },
+    theme: {
+      mode: "dark"
+    },
+    stroke: {
+      curve: "smooth",
+      width: 3
+    },
+    xaxis: {
+      categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    },
+    colors: ["#38bdf8"],
+    grid: {
+      borderColor: "#1e293b"
+    }
+  };
 
-  useEffect(() => {
-
-    const fetchData = async () => {
-
-      try {
-
-        const token = localStorage.getItem('token');
-
-        const res = await axios.get(
-          'https://finguard-ai-r2ux.onrender.com/api/analytics/fraud-count',
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          }
-        );
-
-        setFraudCount(res.data.fraudTransactions);
-
-      } catch (err) {
-
-        console.log(err);
-
-      }
-
-    };
-
-    fetchData();
-
-  }, []);
-
-  const data = [
-    { name: "Fraud", value: fraudCount },
-    { name: "Safe", value: 10 }
+  const chartSeries = [
+    {
+      name: "Fraud Detection",
+      data: [12, 18, 10, 28, 19, 35, 25]
+    }
   ];
 
-  const COLORS = ["#ef4444", "#22c55e"];
-
   return (
-
-    <div style={{ display: "flex" }}>
+    <div className="flex bg-slate-950 min-h-screen text-white">
 
       <Sidebar />
 
-      <div
-        style={{
-          marginLeft: window.innerWidth < 768 ? "0px" : "240px",
-          padding: "30px",
-          width: "100%",
-          minHeight: "100vh",
-          background: "#020617",
-          color: "white"
-        }}
-      >
+      <div className="flex-1 ml-[220px] p-8">
 
-        <Navbar />
+        {/* TOP HEADER */}
+        <div className="flex justify-between items-center mb-10">
 
-        <h1 style={{ fontSize: "38px" }}>
-          Welcome back, Vishal 👋
-        </h1>
+          <div>
+            <h1 className="text-4xl font-bold">
+              FinGuard AI Dashboard
+            </h1>
 
-        <p style={{ color: "#94a3b8" }}>
-          Real-time AI Fraud Monitoring System
-        </p>
+            <p className="text-slate-400 mt-2">
+              Real-time fraud monitoring & analytics
+            </p>
+          </div>
 
-        {/* CARDS */}
+          <div className="bg-slate-900 px-5 py-3 rounded-2xl border border-slate-800">
+            <p className="text-sm text-slate-400">
+              Active Monitoring
+            </p>
 
-        <div
-          style={{
-            display: "flex",
-            gap: "20px",
-            marginTop: "30px",
-            flexWrap: "wrap"
-          }}
-        >
+            <h3 className="text-xl font-bold text-green-400">
+              System Healthy
+            </h3>
+          </div>
 
-          <div style={card}>
+        </div>
 
-            <FiAlertTriangle
-              size={35}
-              color="#ef4444"
-            />
+        {/* STATS CARDS */}
 
-            <h2>{fraudCount}</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-            <p>Fraud Transactions</p>
+          <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl shadow-xl hover:scale-105 transition duration-300">
+
+            <div className="flex justify-between items-center">
+
+              <div>
+                <p className="text-slate-400">
+                  Fraud Transactions
+                </p>
+
+                <h2 className="text-4xl font-bold mt-2">
+                  128
+                </h2>
+              </div>
+
+              <FaShieldAlt className="text-red-400 text-4xl" />
+
+            </div>
+
+            <div className="mt-4 flex items-center gap-2 text-red-400">
+              <FaArrowUp />
+              <span>+12% this week</span>
+            </div>
 
           </div>
 
-          <div style={card}>
+          <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl shadow-xl hover:scale-105 transition duration-300">
 
-            <FiDollarSign
-              size={35}
-              color="#38bdf8"
-            />
+            <div className="flex justify-between items-center">
 
-            <h2>₹ 12.4L</h2>
+              <div>
+                <p className="text-slate-400">
+                  Transaction Volume
+                </p>
 
-            <p>Total Volume</p>
+                <h2 className="text-4xl font-bold mt-2">
+                  ₹12.4L
+                </h2>
+              </div>
+
+              <FaWallet className="text-cyan-400 text-4xl" />
+
+            </div>
+
+            <div className="mt-4 flex items-center gap-2 text-green-400">
+              <FaArrowUp />
+              <span>+18% growth</span>
+            </div>
 
           </div>
 
-          <div style={card}>
+          <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl shadow-xl hover:scale-105 transition duration-300">
 
-            <FiShield
-              size={35}
-              color="#22c55e"
-            />
+            <div className="flex justify-between items-center">
 
-            <h2>98%</h2>
+              <div>
+                <p className="text-slate-400">
+                  Detection Accuracy
+                </p>
 
-            <p>Detection Accuracy</p>
+                <h2 className="text-4xl font-bold mt-2">
+                  98%
+                </h2>
+              </div>
+
+              <FaChartLine className="text-green-400 text-4xl" />
+
+            </div>
+
+            <div className="mt-4 flex items-center gap-2 text-green-400">
+              <FaArrowUp />
+              <span>AI performing well</span>
+            </div>
 
           </div>
 
         </div>
 
-        {/* RECENT ACTIVITY */}
+        {/* GRAPH SECTION */}
 
-        <div style={activityBox}>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-10">
 
-          <h2>Recent Activity ⚡</h2>
+          <div className="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-3xl p-6">
 
-          <div style={activity}>
-            🚨 Fraud transaction detected from Mumbai
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold">
+                Fraud Analytics
+              </h2>
+
+              <p className="text-slate-400">
+                Weekly fraud detection trends
+              </p>
+            </div>
+
+            <Chart
+              options={chartOptions}
+              series={chartSeries}
+              type="area"
+              height={320}
+            />
+
           </div>
 
-          <div style={activity}>
-            ✅ Safe transaction processed from Pune
+          {/* RECENT ACTIVITY */}
+
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6">
+
+            <h2 className="text-2xl font-bold mb-6">
+              Recent Activity
+            </h2>
+
+            <div className="space-y-5">
+
+              <div className="border-l-4 border-red-500 pl-4">
+                <p className="font-semibold">
+                  Fraud detected
+                </p>
+
+                <span className="text-slate-400 text-sm">
+                  2 minutes ago
+                </span>
+              </div>
+
+              <div className="border-l-4 border-cyan-500 pl-4">
+                <p className="font-semibold">
+                  New transaction processed
+                </p>
+
+                <span className="text-slate-400 text-sm">
+                  10 minutes ago
+                </span>
+              </div>
+
+              <div className="border-l-4 border-green-500 pl-4">
+                <p className="font-semibold">
+                  AI model updated
+                </p>
+
+                <span className="text-slate-400 text-sm">
+                  1 hour ago
+                </span>
+              </div>
+
+            </div>
+
           </div>
-
-          <div style={activity}>
-            🔐 Admin logged into dashboard
-          </div>
-
-        </div>
-
-        {/* CHART */}
-
-        <div style={chartBox}>
-
-          <h2>Fraud Analytics 📈</h2>
-
-          <ResponsiveContainer width="100%" height={350}>
-
-            <PieChart>
-
-              <Pie
-                data={data}
-                cx="50%"
-                cy="50%"
-                outerRadius={120}
-                dataKey="value"
-                label
-              >
-
-                {
-                  data.map((entry, index) => (
-
-                    <Cell
-                      key={index}
-                      fill={COLORS[index]}
-                    />
-
-                  ))
-                }
-
-              </Pie>
-
-              <Tooltip />
-
-            </PieChart>
-
-          </ResponsiveContainer>
 
         </div>
 
       </div>
 
     </div>
-
   );
 }
-
-const card = {
-
-  background: "rgba(255,255,255,0.05)",
-  border: "1px solid rgba(255,255,255,0.08)",
-  padding: "30px",
-  borderRadius: "20px",
-  width: "260px",
-  backdropFilter: "blur(12px)",
-  boxShadow: "0 0 20px rgba(0,0,0,0.25)"
-
-};
-
-const activityBox = {
-
-  marginTop: "40px",
-  background: "rgba(255,255,255,0.05)",
-  border: "1px solid rgba(255,255,255,0.08)",
-  padding: "25px",
-  borderRadius: "20px",
-  backdropFilter: "blur(12px)"
-
-};
-
-const activity = {
-
-  background: "#1e293b",
-  padding: "15px",
-  borderRadius: "12px",
-  marginTop: "15px"
-
-};
-
-const chartBox = {
-
-  marginTop: "40px",
-  background: "rgba(255,255,255,0.05)",
-  border: "1px solid rgba(255,255,255,0.08)",
-  padding: "25px",
-  borderRadius: "20px",
-  backdropFilter: "blur(12px)"
-
-};
 
 export default Dashboard;

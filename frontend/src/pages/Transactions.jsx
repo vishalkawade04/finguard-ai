@@ -1,209 +1,126 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-
-import {
-  FiAlertTriangle,
-  FiCheckCircle,
-  FiCreditCard
-} from "react-icons/fi";
+import { useState } from "react";
 
 import Sidebar from "../layout/Sidebar";
-import Navbar from "../layout/Navbar";
+
+import {
+  FaSearch,
+  FaShieldAlt
+} from "react-icons/fa";
 
 function Transactions() {
 
-  const [transactions, setTransactions] = useState([]);
   const [search, setSearch] = useState("");
 
-  useEffect(() => {
+  const transactions = [
+    {
+      user: "Vishal",
+      amount: "₹50,000",
+      location: "Mumbai",
+      status: "Fraud"
+    },
+    {
+      user: "Rahul",
+      amount: "₹12,500",
+      location: "Pune",
+      status: "Safe"
+    },
+    {
+      user: "Anjali",
+      amount: "₹90,000",
+      location: "Delhi",
+      status: "Fraud"
+    },
+    {
+      user: "Rohit",
+      amount: "₹8,000",
+      location: "Bangalore",
+      status: "Safe"
+    }
+  ];
 
-    const fetchTransactions = async () => {
-
-      try {
-
-        const token = localStorage.getItem("token");
-
-        const res = await axios.get(
-          "https://finguard-ai-r2ux.onrender.com/api/transactions",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          }
-        );
-
-        setTransactions(res.data.transactions);
-
-      } catch (error) {
-
-        console.log(error);
-
-      }
-
-    };
-
-    fetchTransactions();
-
-  }, []);
-
-  const filteredTransactions = transactions.filter((tx) =>
-    tx.location.toLowerCase().includes(search.toLowerCase())
+  const filteredTransactions = transactions.filter((item) =>
+    item.location.toLowerCase().includes(search.toLowerCase())
   );
-
-  const fraudTransactions = transactions.filter(
-    (tx) => tx.isFraud
-  ).length;
-
-  const safeTransactions =
-    transactions.length - fraudTransactions;
 
   return (
 
-    <div style={{ display: "flex" }}>
+    <div className="flex bg-slate-950 min-h-screen text-white">
 
       <Sidebar />
 
-      <div
-        style={{
-          marginLeft: window.innerWidth < 768 ? "0px" : "240px",
-          padding: window.innerWidth < 768 ? "15px" : "30px",
-          width: "100%",
-          minHeight: "100vh",
-          background: "#020617",
-          color: "white"
-        }}
-      >
+      <div className="flex-1 ml-[240px] p-8">
 
-        <Navbar />
+        {/* HEADER */}
 
-        <h1
-          style={{
-            fontSize: "38px",
-            marginBottom: "10px"
-          }}
-        >
-          Transactions 💳
-        </h1>
+        <div className="flex justify-between items-center mb-10">
 
-        <p style={{ color: "#94a3b8" }}>
-          Monitor and track transaction activity
-        </p>
+          <div>
 
-        {/* TOP STATS */}
+            <h1 className="text-4xl font-bold">
+              Transactions
+            </h1>
 
-        <div
-          style={{
-            display: "flex",
-            gap: "20px",
-            marginTop: "30px",
-            flexWrap: "wrap"
-          }}
-        >
-
-          {/* CARD 1 */}
-
-          <div style={card}>
-
-            <FiCreditCard
-              size={35}
-              color="#38bdf8"
-            />
-
-            <h2 style={{ marginTop: "15px" }}>
-              {transactions.length}
-            </h2>
-
-            <p style={{ color: "#94a3b8" }}>
-              Total Transactions
+            <p className="text-slate-400 mt-2">
+              Monitor suspicious activities in real-time
             </p>
 
           </div>
 
-          {/* CARD 2 */}
+          <div className="bg-slate-900 border border-slate-800 px-5 py-3 rounded-2xl">
 
-          <div style={card}>
-
-            <FiAlertTriangle
-              size={35}
-              color="#ef4444"
-            />
-
-            <h2 style={{ marginTop: "15px" }}>
-              {fraudTransactions}
-            </h2>
-
-            <p style={{ color: "#94a3b8" }}>
-              Fraud Transactions
+            <p className="text-slate-400 text-sm">
+              Protected by AI
             </p>
 
-          </div>
-
-          {/* CARD 3 */}
-
-          <div style={card}>
-
-            <FiCheckCircle
-              size={35}
-              color="#22c55e"
-            />
-
-            <h2 style={{ marginTop: "15px" }}>
-              {safeTransactions}
-            </h2>
-
-            <p style={{ color: "#94a3b8" }}>
-              Safe Transactions
-            </p>
+            <h3 className="text-green-400 font-bold">
+              Monitoring Active
+            </h3>
 
           </div>
 
         </div>
 
-        {/* SEARCH */}
+        {/* SEARCH BAR */}
 
-        <input
-          type="text"
-          placeholder="Search by location..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          style={searchBox}
-        />
+        <div className="relative w-full md:w-[400px] mb-8">
+
+          <FaSearch className="absolute top-4 left-4 text-slate-400" />
+
+          <input
+            type="text"
+            placeholder="Search by location..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full bg-slate-900 border border-slate-800 rounded-2xl py-4 pl-12 pr-4 outline-none focus:border-cyan-400"
+          />
+
+        </div>
 
         {/* TABLE */}
 
-        <div
-          style={{
-            marginTop: "30px",
-            overflowX: "auto",
-            background: "rgba(255,255,255,0.05)",
-            border: "1px solid rgba(255,255,255,0.08)",
-            borderRadius: "20px",
-            backdropFilter: "blur(12px)",
-            padding: "20px",
-            boxShadow: "0 0 20px rgba(0,0,0,0.25)"
-          }}
-        >
+        <div className="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden">
 
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse"
-            }}
-          >
+          <table className="w-full">
 
-            <thead>
+            <thead className="bg-slate-800">
 
-              <tr
-                style={{
-                  color: "#94a3b8",
-                  borderBottom: "1px solid rgba(255,255,255,0.08)"
-                }}
-              >
+              <tr>
 
-                <th style={th}>User</th>
-                <th style={th}>Amount</th>
-                <th style={th}>Location</th>
-                <th style={th}>Status</th>
+                <th className="text-left p-5">
+                  User
+                </th>
+
+                <th className="text-left p-5">
+                  Amount
+                </th>
+
+                <th className="text-left p-5">
+                  Location
+                </th>
+
+                <th className="text-left p-5">
+                  Status
+                </th>
 
               </tr>
 
@@ -211,60 +128,46 @@ function Transactions() {
 
             <tbody>
 
-              {
-                filteredTransactions.map((tx) => (
+              {filteredTransactions.map((item, index) => (
 
-                  <tr
-                    key={tx._id}
-                    style={{
-                      transition: "0.3s"
-                    }}
-                    onMouseOver={(e) => {
-                      e.currentTarget.style.background =
-                        "rgba(255,255,255,0.03)";
-                    }}
-                    onMouseOut={(e) => {
-                      e.currentTarget.style.background =
-                        "transparent";
-                    }}
-                  >
+                <tr
+                  key={index}
+                  className="border-t border-slate-800 hover:bg-slate-800/40 transition duration-300"
+                >
 
-                    <td style={td}>
-                      {tx.userId}
-                    </td>
+                  <td className="p-5 font-semibold">
+                    {item.user}
+                  </td>
 
-                    <td style={td}>
-                      ₹ {tx.amount}
-                    </td>
+                  <td className="p-5 text-cyan-400 font-bold">
+                    {item.amount}
+                  </td>
 
-                    <td style={td}>
-                      {tx.location}
-                    </td>
+                  <td className="p-5">
+                    {item.location}
+                  </td>
 
-                    <td style={td}>
+                  <td className="p-5">
 
-                      {
-                        tx.isFraud ? (
+                    <span
+                      className={`px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 w-fit ${
+                        item.status === "Fraud"
+                          ? "bg-red-500/20 text-red-400"
+                          : "bg-green-500/20 text-green-400"
+                      }`}
+                    >
 
-                          <span style={fraudBadge}>
-                            Fraud
-                          </span>
+                      <FaShieldAlt />
 
-                        ) : (
+                      {item.status}
 
-                          <span style={safeBadge}>
-                            Safe
-                          </span>
+                    </span>
 
-                        )
-                      }
+                  </td>
 
-                    </td>
+                </tr>
 
-                  </tr>
-
-                ))
-              }
+              ))}
 
             </tbody>
 
@@ -275,70 +178,7 @@ function Transactions() {
       </div>
 
     </div>
-
   );
 }
-
-const card = {
-
-  background: "rgba(255,255,255,0.05)",
-  border: "1px solid rgba(255,255,255,0.08)",
-  padding: "30px",
-  borderRadius: "20px",
-  width: "260px",
-  backdropFilter: "blur(12px)",
-  boxShadow: "0 0 20px rgba(0,0,0,0.25)"
-
-};
-
-const searchBox = {
-
-  marginTop: "30px",
-  padding: "14px",
-  width: "350px",
-  borderRadius: "12px",
-  border: "none",
-  outline: "none",
-  background: "rgba(255,255,255,0.08)",
-  color: "white",
-  fontSize: "15px"
-
-};
-
-const th = {
-
-  textAlign: "left",
-  padding: "18px"
-
-};
-
-const td = {
-
-  padding: "18px",
-  borderBottom: "1px solid rgba(255,255,255,0.05)"
-
-};
-
-const fraudBadge = {
-
-  background: "#ef4444",
-  color: "white",
-  padding: "8px 14px",
-  borderRadius: "10px",
-  fontSize: "14px",
-  fontWeight: "bold"
-
-};
-
-const safeBadge = {
-
-  background: "#22c55e",
-  color: "white",
-  padding: "8px 14px",
-  borderRadius: "10px",
-  fontSize: "14px",
-  fontWeight: "bold"
-
-};
 
 export default Transactions;
