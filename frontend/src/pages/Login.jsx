@@ -24,7 +24,7 @@ function Login() {
     try {
 
       const res = await axios.post(
-        "https://finguard-ai-r2ux.onrender.com",
+        "https://finguard-ai-r2ux.onrender.com/api/auth/login",
         {
           email,
           password
@@ -92,14 +92,14 @@ function Login() {
 
               <FaEnvelope className="text-slate-400" />
 
-              <input
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-transparent outline-none px-4 py-4 text-white"
-                required
-              />
+             <input
+           type="email"
+  
+          placeholder="Enter your email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+           className="w-full bg-transparent text-white placeholder-gray-400 border-none outline-none focus:outline-none focus:ring-0 px-4 py-4 appearance-none"
+/>
 
             </div>
 
@@ -117,14 +117,13 @@ function Login() {
 
               <FaLock className="text-slate-400" />
 
-              <input
-                type="password"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-transparent outline-none px-4 py-4 text-white"
-                required
-              />
+             <input
+  type="password"
+  placeholder="Enter your password"
+  value={password}
+  onChange={(e) => setPassword(e.target.value)}
+  className="w-full bg-transparent text-white placeholder-gray-400 border-none outline-none focus:outline-none focus:ring-0 px-4 py-4 appearance-none"
+/>
 
             </div>
 
