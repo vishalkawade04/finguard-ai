@@ -1,3 +1,4 @@
+const analyticsRoutes = require("./routes/analyticsRoutes");
 const cors = require('cors');
 const express = require('express');
 
@@ -26,7 +27,9 @@ connectDB();
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: "*"
+}));
 
 // Security Headers
 app.use(helmet());
