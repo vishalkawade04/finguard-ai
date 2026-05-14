@@ -14,7 +14,6 @@ const transactionRoutes = require('./src/routes/transactionRoutes');
 
 const authRoutes = require('./src/routes/authRoutes');
 
-const analyticsRoutes = require('./src/routes/analyticsRoutes');
 
 const errorHandler = require('./src/middleware/errorHandler');
 
