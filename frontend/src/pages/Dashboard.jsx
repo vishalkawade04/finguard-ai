@@ -31,7 +31,7 @@ function Dashboard() {
         const token = localStorage.getItem('token');
 
         const res = await axios.get(
-          'http://localhost:5000/api/analytics/fraud-count',
+          'https://finguard-ai-r2ux.onrender.com/api/analytics/fraud-count',
           {
             headers: {
               Authorization: `Bearer ${token}`
