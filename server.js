@@ -1,4 +1,4 @@
-const analyticsRoutes = require("./routes/analyticsRoutes");
+const analyticsRoutes = require("./src/routes/analyticsRoutes");
 const cors = require('cors');
 const express = require('express');
 
