@@ -1,3 +1,7 @@
+import { useEffect, useState } from "react";
+
+import axios from "axios";
+
 import Sidebar from "../layout/Sidebar";
 
 import Chart from "react-apexcharts";
@@ -10,6 +14,32 @@ import {
 } from "react-icons/fa";
 
 function Analytics() {
+
+  const [analytics, setAnalytics] = useState(null);
+
+  useEffect(() => {
+
+    const fetchAnalytics = async () => {
+
+      try {
+
+        const res = await axios.get(
+          "https://finguard-ai-r2ux.onrender.com/api/analytics"
+        );
+
+        setAnalytics(res.data);
+
+      } catch (error) {
+
+        console.log(error);
+
+      }
+
+    };
+
+    fetchAnalytics();
+
+  }, []);
 
   const lineOptions = {
     chart: {
@@ -40,7 +70,7 @@ function Analytics() {
   const lineSeries = [
     {
       name: "Fraud Cases",
-      data: [12, 18, 10, 28, 19, 35, 25]
+      data: analytics?.weeklyFrauds || []
     }
   ];
 
@@ -59,7 +89,10 @@ function Analytics() {
     }
   };
 
-  const donutSeries = [82, 18];
+  const donutSeries = [
+    analytics?.safeTransactions || 0,
+    analytics?.fraudTransactions || 0
+  ];
 
   return (
 
@@ -114,7 +147,7 @@ function Analytics() {
                 </p>
 
                 <h2 className="text-4xl font-bold mt-2">
-                  128
+                  {analytics?.fraudDetected}
                 </h2>
 
               </div>
@@ -141,7 +174,7 @@ function Analytics() {
                 </p>
 
                 <h2 className="text-4xl font-bold mt-2">
-                  98%
+                  {analytics?.accuracy}
                 </h2>
 
               </div>
@@ -168,7 +201,7 @@ function Analytics() {
                 </p>
 
                 <h2 className="text-4xl font-bold mt-2">
-                  Low
+                  {analytics?.riskLevel}
                 </h2>
 
               </div>
