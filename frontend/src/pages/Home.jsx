@@ -11,7 +11,7 @@ function Home() {
 
   return (
 
-    <div className="min-h-screen bg-slate-950 text-white overflow-hidden">
+    <div className="min-h-screen bg-slate-950 text-white overflow-hidden relative">
 
       {/* BACKGROUND GLOW */}
 
@@ -21,7 +21,7 @@ function Home() {
 
       {/* NAVBAR */}
 
-      <nav className="relative z-10 flex justify-between items-center px-8 py-6 border-b border-slate-800">
+      <nav className="relative z-10 flex justify-between items-center px-8 py-6 border-b border-slate-800 backdrop-blur-xl">
 
         <div>
 
@@ -31,14 +31,27 @@ function Home() {
 
         </div>
 
-        <Link
-          to="/login"
-          className="bg-cyan-500 hover:bg-cyan-400 text-slate-950 px-6 py-3 rounded-2xl font-bold transition duration-300"
-        >
+        <div className="flex gap-4">
 
-          Login
+          <Link
+            to="/login"
+            className="border border-slate-700 hover:border-cyan-400 px-6 py-3 rounded-2xl font-bold transition duration-300"
+          >
 
-        </Link>
+            Login
+
+          </Link>
+
+          <Link
+            to="/register"
+            className="bg-cyan-500 hover:bg-cyan-400 text-slate-950 px-6 py-3 rounded-2xl font-bold transition duration-300 shadow-lg shadow-cyan-500/20"
+          >
+
+            Register
+
+          </Link>
+
+        </div>
 
       </nav>
 
@@ -69,14 +82,58 @@ function Home() {
 
         </p>
 
+        {/* STATS */}
+
+        <div className="flex gap-10 mt-10 flex-wrap justify-center">
+
+          <div>
+
+            <h2 className="text-4xl font-bold text-cyan-400">
+              99.8%
+            </h2>
+
+            <p className="text-slate-400 mt-2">
+              Fraud Detection Accuracy
+            </p>
+
+          </div>
+
+          <div>
+
+            <h2 className="text-4xl font-bold text-green-400">
+              24/7
+            </h2>
+
+            <p className="text-slate-400 mt-2">
+              Real-Time Monitoring
+            </p>
+
+          </div>
+
+          <div>
+
+            <h2 className="text-4xl font-bold text-purple-400">
+              1M+
+            </h2>
+
+            <p className="text-slate-400 mt-2">
+              Transactions Analyzed
+            </p>
+
+          </div>
+
+        </div>
+
+        {/* BUTTONS */}
+
         <div className="flex gap-6 mt-12 flex-wrap justify-center">
 
           <Link
-            to="/login"
+            to="/register"
             className="bg-cyan-500 hover:bg-cyan-400 text-slate-950 px-8 py-4 rounded-2xl text-lg font-bold transition duration-300 shadow-lg shadow-cyan-500/20"
           >
 
-            Get Started
+            Start Free Trial
 
           </Link>
 
@@ -85,7 +142,7 @@ function Home() {
             className="border border-slate-700 hover:border-cyan-400 px-8 py-4 rounded-2xl text-lg font-bold transition duration-300"
           >
 
-            View Dashboard
+            Live Demo
 
           </Link>
 
@@ -96,6 +153,21 @@ function Home() {
       {/* FEATURES */}
 
       <section className="relative z-10 px-8 pb-24">
+
+        <div className="max-w-7xl mx-auto mb-16 text-center">
+
+          <h2 className="text-5xl font-bold mb-6">
+            Enterprise Fraud Protection
+          </h2>
+
+          <p className="text-slate-400 text-xl max-w-3xl mx-auto">
+
+            AI-driven monitoring, intelligent analytics, and secure
+            transaction protection built for modern fintech systems.
+
+          </p>
+
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
 
@@ -174,6 +246,14 @@ function Home() {
         </div>
 
       </section>
+
+      {/* FOOTER */}
+
+      <footer className="relative z-10 border-t border-slate-800 py-8 text-center text-slate-500">
+
+        © 2026 FinGuard AI • Secure Fintech Intelligence Platform
+
+      </footer>
 
     </div>
   );
