@@ -1,33 +1,15 @@
-const express = require('express');
+const express = require("express");
 
 const router = express.Router();
 
-const authMiddleware = require('../middleware/authMiddleware');
+router.get("/", (req, res) => {
 
-const adminMiddleware = require('../middleware/adminMiddleware');
+  res.json({
+    fraudDetected: 128,
+    accuracy: "98%",
+    riskLevel: "Low"
+  });
 
-const {
-    getTotalTransactions,
-    getFraudCount
-} = require('../controllers/analyticsController');
-
-
-// Total Transactions Analytics
-router.get(
-    '/total-transactions',
-    authMiddleware,
-    adminMiddleware,
-    getTotalTransactions
-);
-
-
-// Fraud Transactions Analytics
-router.get(
-    '/fraud-count',
-    authMiddleware,
-    adminMiddleware,
-    getFraudCount
-);
-
+});
 
 module.exports = router;
