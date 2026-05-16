@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 import Sidebar from "../layout/Sidebar";
 
@@ -11,35 +12,100 @@ function Transactions() {
 
   const [search, setSearch] = useState("");
 
-  const transactions = [
-    {
-      user: "Vishal",
-      amount: "₹50,000",
-      location: "Mumbai",
-      status: "Fraud"
-    },
-    {
-      user: "Rahul",
-      amount: "₹12,500",
-      location: "Pune",
-      status: "Safe"
-    },
-    {
-      user: "Anjali",
-      amount: "₹90,000",
-      location: "Delhi",
-      status: "Fraud"
-    },
-    {
-      user: "Rohit",
-      amount: "₹8,000",
-      location: "Bangalore",
-      status: "Safe"
+  const [transactions, setTransactions] = useState([]);
+
+  const [user, setUser] = useState("");
+
+  const [amount, setAmount] = useState("");
+
+  const [location, setLocation] = useState("");
+
+  const [status, setStatus] = useState("Safe");
+
+  // FETCH TRANSACTIONS
+
+  useEffect(() => {
+
+    const fetchTransactions = async () => {
+
+      try {
+
+        const token = localStorage.getItem("token");
+
+        const res = await axios.get(
+          "https://finguard-ai-r2ux.onrender.com/api/transactions",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        );
+
+        console.log(res.data);
+
+        setTransactions(res.data.transactions || []);
+
+      } catch (error) {
+
+        console.log(error.response?.data || error);
+
+      }
+
+    };
+
+    fetchTransactions();
+
+  }, []);
+
+  // ADD TRANSACTION
+
+  const addTransaction = async () => {
+
+    try {
+
+      const token = localStorage.getItem("token");
+
+      const res = await axios.post(
+        "https://finguard-ai-r2ux.onrender.com/api/transactions",
+        {
+          user,
+          amount,
+          location,
+          status
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      console.log(res.data);
+
+      setTransactions([
+        ...transactions,
+        res.data.transaction
+      ]);
+
+      setUser("");
+      setAmount("");
+      setLocation("");
+      setStatus("Safe");
+
+    } catch (error) {
+
+      console.log(error.response?.data || error);
+
     }
-  ];
+
+  };
+
+  // SEARCH FILTER
 
   const filteredTransactions = transactions.filter((item) =>
-    item.location.toLowerCase().includes(search.toLowerCase())
+    (item.location || "")
+      .toLowerCase()
+      .includes(search.toLowerCase())
   );
 
   return (
@@ -80,7 +146,7 @@ function Transactions() {
 
         </div>
 
-        {/* SEARCH BAR */}
+        {/* SEARCH */}
 
         <div className="relative w-full md:w-[400px] mb-8">
 
@@ -93,6 +159,79 @@ function Transactions() {
             onChange={(e) => setSearch(e.target.value)}
             className="w-full bg-slate-900 border border-slate-800 rounded-2xl py-4 pl-12 pr-4 outline-none focus:border-cyan-400"
           />
+
+        </div>
+
+        {/* ADD TRANSACTION */}
+
+        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 mb-8">
+
+          <h2 className="text-2xl font-bold mb-6">
+            Add Transaction
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+
+            {/* USER */}
+
+            <input
+              type="text"
+              placeholder="User Name"
+              value={user}
+              onChange={(e) => setUser(e.target.value)}
+              className="bg-slate-800 border border-slate-700 rounded-2xl px-4 py-4 outline-none focus:border-cyan-400"
+            />
+
+            {/* AMOUNT */}
+
+            <input
+              type="number"
+              placeholder="Amount"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              className="bg-slate-800 border border-slate-700 rounded-2xl px-4 py-4 outline-none focus:border-cyan-400"
+            />
+
+            {/* LOCATION */}
+
+            <input
+              type="text"
+              placeholder="Location"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              className="bg-slate-800 border border-slate-700 rounded-2xl px-4 py-4 outline-none focus:border-cyan-400"
+            />
+
+            {/* STATUS */}
+
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              className="bg-slate-800 border border-slate-700 rounded-2xl px-4 py-4 outline-none focus:border-cyan-400"
+            >
+
+              <option value="Safe">
+                Safe
+              </option>
+
+              <option value="Fraud">
+                Fraud
+              </option>
+
+            </select>
+
+            {/* BUTTON */}
+
+            <button
+              onClick={addTransaction}
+              className="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-2xl transition duration-300"
+            >
+
+              Add Transaction
+
+            </button>
+
+          </div>
 
         </div>
 
@@ -140,7 +279,7 @@ function Transactions() {
                   </td>
 
                   <td className="p-5 text-cyan-400 font-bold">
-                    {item.amount}
+                    ₹{item.amount}
                   </td>
 
                   <td className="p-5">

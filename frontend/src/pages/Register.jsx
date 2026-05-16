@@ -27,7 +27,7 @@ function Register() {
 
     try {
 
-      await axios.post(
+      const res = await axios.post(
         "https://finguard-ai-r2ux.onrender.com/api/auth/register",
         {
           username: name,
@@ -36,9 +36,11 @@ function Register() {
         }
       );
 
+      localStorage.setItem("token", res.data.token);
+
       alert("Registration Successful 😎");
 
-      navigate("/login");
+      navigate("/dashboard");
 
     } catch (error) {
 
