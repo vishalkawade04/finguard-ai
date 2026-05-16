@@ -1,52 +1,66 @@
-const express = require('express');
+const express = require("express");
 
 const router = express.Router();
 
-const validateTransaction = require('../middleware/validateTransaction');
-
-const authMiddleware = require('../middleware/authMiddleware');
-
-const adminMiddleware = require('../middleware/adminMiddleware');
-
-const {
-    createTransaction,
-    getAllTransactions,
-    getFraudTransactions,
-    getTransactionsByUser
-} = require('../controllers/transactionController');
+const Transaction = require("../models/Transaction");
 
 
-// Create Transaction
-router.post(
-    '/add',
-    validateTransaction,
-    createTransaction
-);
+// GET ALL TRANSACTIONS
+
+router.get("/", async (req, res) => {
+
+  try {
+
+    const transactions = await Transaction.find();
+
+    res.json({
+      success: true,
+      transactions
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+
+  }
+
+});
 
 
-// Protected Route
-router.get(
-    '/',
-    authMiddleware,
-    getAllTransactions
-);
+// ADD TRANSACTION
 
+router.post("/", async (req, res) => {
 
-// Admin Only Fraud Route
-router.get(
-    '/fraud',
-    authMiddleware,
-    adminMiddleware,
-    getFraudTransactions
-);
+  try {
 
+    const { user, amount, location, status } = req.body;
 
-// Protected User Transactions
-router.get(
-    '/user/:userId',
-    authMiddleware,
-    getTransactionsByUser
-);
+    const newTransaction = new Transaction({
+      user,
+      amount,
+      location,
+      status
+    });
 
+    await newTransaction.save();
+
+    res.status(201).json({
+      success: true,
+      transaction: newTransaction
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+
+  }
+
+});
 
 module.exports = router;
