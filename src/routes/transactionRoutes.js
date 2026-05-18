@@ -1,9 +1,9 @@
+
 const express = require("express");
 
 const router = express.Router();
 
 const Transaction = require("../models/Transaction");
-
 
 // GET ALL TRANSACTIONS
 
@@ -11,7 +11,9 @@ router.get("/", async (req, res) => {
 
   try {
 
-    const transactions = await Transaction.find();
+    const transactions = await Transaction.find().sort({
+      createdAt: -1
+    });
 
     res.json({
       success: true,
@@ -29,30 +31,36 @@ router.get("/", async (req, res) => {
 
 });
 
-
 // ADD TRANSACTION
+
 
 router.post("/", async (req, res) => {
 
   try {
 
-    const { user, amount, location, status } = req.body;
+    console.log(req.body);
 
-    const newTransaction = new Transaction({
-      user,
+    const {
+      userId,
       amount,
       location,
-      status
+      isFraud
+    } = req.body;
+
+    const newTransaction = new Transaction({
+      userId: userId || "Anonymous",
+      amount,
+      location,
+      isFraud
     });
 
     await newTransaction.save();
 
-    res.status(201).json({
-      success: true,
-      transaction: newTransaction
-    });
+    res.status(201).json(newTransaction);
 
   } catch (error) {
+
+    console.log(error);
 
     res.status(500).json({
       success: false,
@@ -63,4 +71,7 @@ router.post("/", async (req, res) => {
 
 });
 
+
+
 module.exports = router;
+

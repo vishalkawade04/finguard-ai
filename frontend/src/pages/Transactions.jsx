@@ -11,47 +11,43 @@ import {
 function Transactions() {
 
   const [search, setSearch] = useState("");
-
   const [transactions, setTransactions] = useState([]);
 
   const [user, setUser] = useState("");
-
   const [amount, setAmount] = useState("");
-
   const [location, setLocation] = useState("");
-
   const [status, setStatus] = useState("Safe");
 
   // FETCH TRANSACTIONS
 
-  useEffect(() => {
+  const fetchTransactions = async () => {
 
-    const fetchTransactions = async () => {
+    try {
 
-      try {
+      const token = localStorage.getItem("token");
 
-        const token = localStorage.getItem("token");
-
-        const res = await axios.get(
-          "https://finguard-ai-r2ux.onrender.com/api/transactions",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
+      const res = await axios.get(
+        "https://finguard-ai-r2ux.onrender.com/api/transactions",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
           }
-        );
+        }
+      );
 
-        console.log(res.data);
+      console.log(res.data);
 
-        setTransactions(res.data.transactions || []);
+      setTransactions(res.data.transactions || []);
 
-      } catch (error) {
+    } catch (error) {
 
-        console.log(error.response?.data || error);
+      console.log(error.response?.data || error);
 
-      }
+    }
 
-    };
+  };
+
+  useEffect(() => {
 
     fetchTransactions();
 
@@ -65,13 +61,13 @@ function Transactions() {
 
       const token = localStorage.getItem("token");
 
-      const res = await axios.post(
+      await axios.post(
         "https://finguard-ai-r2ux.onrender.com/api/transactions",
         {
-          user,
-          amount,
+          userId: user,
+          amount: Number(amount),
           location,
-          status
+          isFraud: status === "Fraud"
         },
         {
           headers: {
@@ -80,12 +76,7 @@ function Transactions() {
         }
       );
 
-      console.log(res.data);
-
-      setTransactions([
-        ...transactions,
-        res.data.transaction
-      ]);
+      fetchTransactions();
 
       setUser("");
       setAmount("");
@@ -100,7 +91,7 @@ function Transactions() {
 
   };
 
-  // SEARCH FILTER
+  // FILTER
 
   const filteredTransactions = transactions.filter((item) =>
     (item.location || "")
@@ -132,18 +123,6 @@ function Transactions() {
 
           </div>
 
-          <div className="bg-slate-900 border border-slate-800 px-5 py-3 rounded-2xl">
-
-            <p className="text-slate-400 text-sm">
-              Protected by AI
-            </p>
-
-            <h3 className="text-green-400 font-bold">
-              Monitoring Active
-            </h3>
-
-          </div>
-
         </div>
 
         {/* SEARCH */}
@@ -157,12 +136,12 @@ function Transactions() {
             placeholder="Search by location..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-slate-900 border border-slate-800 rounded-2xl py-4 pl-12 pr-4 outline-none focus:border-cyan-400"
+            className="w-full bg-slate-900 border border-slate-800 rounded-2xl py-4 pl-12 pr-4 outline-none"
           />
 
         </div>
 
-        {/* ADD TRANSACTION */}
+        {/* FORM */}
 
         <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 mb-8">
 
@@ -172,42 +151,34 @@ function Transactions() {
 
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
 
-            {/* USER */}
-
             <input
               type="text"
               placeholder="User Name"
               value={user}
               onChange={(e) => setUser(e.target.value)}
-              className="bg-slate-800 border border-slate-700 rounded-2xl px-4 py-4 outline-none focus:border-cyan-400"
+              className="bg-slate-800 border border-slate-700 rounded-2xl px-4 py-4 outline-none"
             />
-
-            {/* AMOUNT */}
 
             <input
               type="number"
               placeholder="Amount"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className="bg-slate-800 border border-slate-700 rounded-2xl px-4 py-4 outline-none focus:border-cyan-400"
+              className="bg-slate-800 border border-slate-700 rounded-2xl px-4 py-4 outline-none"
             />
-
-            {/* LOCATION */}
 
             <input
               type="text"
               placeholder="Location"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              className="bg-slate-800 border border-slate-700 rounded-2xl px-4 py-4 outline-none focus:border-cyan-400"
+              className="bg-slate-800 border border-slate-700 rounded-2xl px-4 py-4 outline-none"
             />
-
-            {/* STATUS */}
 
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value)}
-              className="bg-slate-800 border border-slate-700 rounded-2xl px-4 py-4 outline-none focus:border-cyan-400"
+              className="bg-slate-800 border border-slate-700 rounded-2xl px-4 py-4 outline-none"
             >
 
               <option value="Safe">
@@ -219,8 +190,6 @@ function Transactions() {
               </option>
 
             </select>
-
-            {/* BUTTON */}
 
             <button
               onClick={addTransaction}
@@ -271,11 +240,11 @@ function Transactions() {
 
                 <tr
                   key={index}
-                  className="border-t border-slate-800 hover:bg-slate-800/40 transition duration-300"
+                  className="border-t border-slate-800"
                 >
 
                   <td className="p-5 font-semibold">
-                    {item.user}
+                    {item.userId || "Unknown"}
                   </td>
 
                   <td className="p-5 text-cyan-400 font-bold">
@@ -290,7 +259,7 @@ function Transactions() {
 
                     <span
                       className={`px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 w-fit ${
-                        item.status === "Fraud"
+                        item.isFraud
                           ? "bg-red-500/20 text-red-400"
                           : "bg-green-500/20 text-green-400"
                       }`}
@@ -298,7 +267,7 @@ function Transactions() {
 
                       <FaShieldAlt />
 
-                      {item.status}
+                      {item.isFraud ? "Fraud" : "Safe"}
 
                     </span>
 
@@ -317,7 +286,10 @@ function Transactions() {
       </div>
 
     </div>
+
   );
+
 }
 
 export default Transactions;
+
