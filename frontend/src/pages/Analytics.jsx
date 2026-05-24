@@ -1,21 +1,32 @@
 import { useEffect, useState } from "react";
-
 import axios from "axios";
 
 import Sidebar from "../layout/Sidebar";
 
-import Chart from "react-apexcharts";
-
 import {
-  FaShieldAlt,
-  FaChartLine,
-  FaRobot,
-  FaArrowUp
-} from "react-icons/fa";
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  ResponsiveContainer,
+  BarChart,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Legend,
+  Bar
+} from "recharts";
 
 function Analytics() {
 
-  const [analytics, setAnalytics] = useState(null);
+  const [analytics, setAnalytics] = useState({
+    totalTransactions: 0,
+    fraudTransactions: 0,
+    safeTransactions: 0,
+    fraudPercentage: 0,
+    riskLevel: "Low",
+    accuracy: "0%"
+  });
 
   useEffect(() => {
 
@@ -24,8 +35,10 @@ function Analytics() {
       try {
 
         const res = await axios.get(
-          "https://finguard-ai-r2ux.onrender.com/api/analytics"
+          "http://localhost:5000/api/analytics"
         );
+
+        console.log(res.data);
 
         setAnalytics(res.data);
 
@@ -41,57 +54,37 @@ function Analytics() {
 
   }, []);
 
-  const lineOptions = {
-    chart: {
-      toolbar: { show: false },
-      background: "transparent"
-    },
+  // PIE DATA
 
-    theme: {
-      mode: "dark"
-    },
+  const pieData = [
 
-    stroke: {
-      curve: "smooth",
-      width: 4
-    },
-
-    colors: ["#38bdf8"],
-
-    xaxis: {
-      categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-    },
-
-    grid: {
-      borderColor: "#1e293b"
-    }
-  };
-
-  const lineSeries = [
     {
-      name: "Fraud Cases",
-      data: analytics?.weeklyFrauds || []
+      name: "Fraud",
+      value: analytics.fraudTransactions
+    },
+
+    {
+      name: "Safe",
+      value: analytics.safeTransactions
     }
+
   ];
 
-  const donutOptions = {
-    labels: ["Safe", "Fraud"],
-    colors: ["#22c55e", "#ef4444"],
+  // BAR DATA
 
-    legend: {
-      labels: {
-        colors: "#fff"
-      }
-    },
+  const barData = [
 
-    theme: {
-      mode: "dark"
+    {
+      name: "Transactions",
+      Fraud: analytics.fraudTransactions,
+      Safe: analytics.safeTransactions
     }
-  };
 
-  const donutSeries = [
-    analytics?.safeTransactions || 0,
-    analytics?.fraudTransactions || 0
+  ];
+
+  const COLORS = [
+    "#ef4444",
+    "#22c55e"
   ];
 
   return (
@@ -102,118 +95,77 @@ function Analytics() {
 
       <div className="flex-1 ml-[240px] p-8">
 
-        {/* HEADER */}
+        <h1 className="text-4xl font-bold mb-10">
+          AI Analytics Dashboard
+        </h1>
 
-        <div className="flex justify-between items-center mb-10">
+        {/* TOP CARDS */}
 
-          <div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-            <h1 className="text-4xl font-bold">
-              Analytics
-            </h1>
+          <div className="bg-slate-900 p-6 rounded-3xl border border-slate-800">
 
-            <p className="text-slate-400 mt-2">
-              AI-powered fraud insights & monitoring
+            <h2 className="text-slate-400 text-lg">
+              Total Transactions
+            </h2>
+
+            <p className="text-4xl font-bold mt-4 text-cyan-400">
+              {analytics.totalTransactions}
             </p>
 
           </div>
 
-          <div className="bg-slate-900 border border-slate-800 px-5 py-3 rounded-2xl">
+          <div className="bg-slate-900 p-6 rounded-3xl border border-slate-800">
 
-            <p className="text-slate-400 text-sm">
-              AI Engine
+            <h2 className="text-slate-400 text-lg">
+              Fraud Transactions
+            </h2>
+
+            <p className="text-4xl font-bold mt-4 text-red-400">
+              {analytics.fraudTransactions}
             </p>
 
-            <h3 className="text-green-400 font-bold">
-              Running Smoothly
-            </h3>
+          </div>
+
+          <div className="bg-slate-900 p-6 rounded-3xl border border-slate-800">
+
+            <h2 className="text-slate-400 text-lg">
+              Safe Transactions
+            </h2>
+
+            <p className="text-4xl font-bold mt-4 text-green-400">
+              {analytics.safeTransactions}
+            </p>
 
           </div>
 
         </div>
 
-        {/* STATS */}
+        {/* SECOND ROW */}
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
 
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 hover:scale-105 transition duration-300">
+          <div className="bg-slate-900 p-6 rounded-3xl border border-slate-800">
 
-            <div className="flex justify-between items-center">
+            <h2 className="text-slate-400 text-lg">
+              Fraud Percentage
+            </h2>
 
-              <div>
-
-                <p className="text-slate-400">
-                  Fraud Detected
-                </p>
-
-                <h2 className="text-4xl font-bold mt-2">
-                  {analytics?.fraudDetected}
-                </h2>
-
-              </div>
-
-              <FaShieldAlt className="text-red-400 text-4xl" />
-
-            </div>
-
-            <div className="mt-4 flex items-center gap-2 text-red-400">
-              <FaArrowUp />
-              +12% increase
-            </div>
+            <p className="text-5xl font-bold mt-4 text-yellow-400">
+              {analytics.fraudPercentage}%
+            </p>
 
           </div>
 
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 hover:scale-105 transition duration-300">
+          <div className="bg-slate-900 p-6 rounded-3xl border border-slate-800">
 
-            <div className="flex justify-between items-center">
+            <h2 className="text-slate-400 text-lg">
+              Risk Level
+            </h2>
 
-              <div>
-
-                <p className="text-slate-400">
-                  AI Accuracy
-                </p>
-
-                <h2 className="text-4xl font-bold mt-2">
-                  {analytics?.accuracy}
-                </h2>
-
-              </div>
-
-              <FaRobot className="text-cyan-400 text-4xl" />
-
-            </div>
-
-            <div className="mt-4 flex items-center gap-2 text-green-400">
-              <FaArrowUp />
-              Optimized model
-            </div>
-
-          </div>
-
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 hover:scale-105 transition duration-300">
-
-            <div className="flex justify-between items-center">
-
-              <div>
-
-                <p className="text-slate-400">
-                  Risk Score
-                </p>
-
-                <h2 className="text-4xl font-bold mt-2">
-                  {analytics?.riskLevel}
-                </h2>
-
-              </div>
-
-              <FaChartLine className="text-green-400 text-4xl" />
-
-            </div>
-
-            <div className="mt-4 flex items-center gap-2 text-green-400">
-              <FaArrowUp />
-              System stable
-            </div>
+            <p className="text-5xl font-bold mt-4 text-red-400">
+              {analytics.riskLevel}
+            </p>
 
           </div>
 
@@ -221,57 +173,103 @@ function Analytics() {
 
         {/* CHARTS */}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
 
-          {/* LINE CHART */}
+          {/* PIE CHART */}
 
-          <div className="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-3xl p-6">
+          <div className="bg-slate-900 rounded-3xl p-6 border border-slate-800">
 
-            <div className="mb-6">
+            <h2 className="text-2xl font-bold mb-6">
+              Fraud Detection Ratio
+            </h2>
 
-              <h2 className="text-2xl font-bold">
-                Fraud Trends
-              </h2>
+            <ResponsiveContainer
+              width="100%"
+              height={300}
+            >
 
-              <p className="text-slate-400">
-                Weekly detection analytics
-              </p>
+              <PieChart>
 
-            </div>
+                <Pie
+                  data={pieData}
+                  dataKey="value"
+                  outerRadius={100}
+                  label
+                >
 
-            <Chart
-              options={lineOptions}
-              series={lineSeries}
-              type="area"
-              height={320}
-            />
+                  {pieData.map((entry, index) => (
+
+                    <Cell
+                      key={index}
+                      fill={COLORS[index]}
+                    />
+
+                  ))}
+
+                </Pie>
+
+                <Tooltip />
+
+              </PieChart>
+
+            </ResponsiveContainer>
+
+          </div>
+
+          {/* BAR CHART */}
+
+          <div className="bg-slate-900 rounded-3xl p-6 border border-slate-800">
+
+            <h2 className="text-2xl font-bold mb-6">
+              Transaction Overview
+            </h2>
+
+            <ResponsiveContainer
+              width="100%"
+              height={300}
+            >
+
+              <BarChart data={barData}>
+
+                <CartesianGrid strokeDasharray="3 3" />
+
+                <XAxis dataKey="name" />
+
+                <YAxis />
+
+                <Tooltip />
+
+                <Legend />
+
+                <Bar
+                  dataKey="Fraud"
+                  fill="#ef4444"
+                />
+
+                <Bar
+                  dataKey="Safe"
+                  fill="#22c55e"
+                />
+
+              </BarChart>
+
+            </ResponsiveContainer>
 
           </div>
 
-          {/* DONUT CHART */}
+        </div>
 
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6">
+        {/* AI ACCURACY */}
 
-            <div className="mb-6">
+        <div className="bg-slate-900 p-6 rounded-3xl border border-slate-800 mt-10">
 
-              <h2 className="text-2xl font-bold">
-                Fraud Ratio
-              </h2>
+          <h2 className="text-slate-400 text-lg">
+            AI Detection Accuracy
+          </h2>
 
-              <p className="text-slate-400">
-                Safe vs Fraud transactions
-              </p>
-
-            </div>
-
-            <Chart
-              options={donutOptions}
-              series={donutSeries}
-              type="donut"
-              height={320}
-            />
-
-          </div>
+          <p className="text-6xl font-bold mt-4 text-cyan-400">
+            {analytics.accuracy}
+          </p>
 
         </div>
 

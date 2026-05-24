@@ -16,7 +16,7 @@ function Transactions() {
   const [user, setUser] = useState("");
   const [amount, setAmount] = useState("");
   const [location, setLocation] = useState("");
-  const [status, setStatus] = useState("Safe");
+ 
 
   // FETCH TRANSACTIONS
 
@@ -64,11 +64,10 @@ function Transactions() {
       await axios.post(
         "https://finguard-ai-r2ux.onrender.com/api/transactions",
         {
-          userId: user,
-          amount: Number(amount),
-          location,
-          isFraud: status === "Fraud"
-        },
+  userId: user,
+  amount: Number(amount),
+  location
+},
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -81,7 +80,7 @@ function Transactions() {
       setUser("");
       setAmount("");
       setLocation("");
-      setStatus("Safe");
+     
 
     } catch (error) {
 
@@ -149,7 +148,7 @@ function Transactions() {
             Add Transaction
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
 
             <input
               type="text"
@@ -175,21 +174,7 @@ function Transactions() {
               className="bg-slate-800 border border-slate-700 rounded-2xl px-4 py-4 outline-none"
             />
 
-            <select
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-              className="bg-slate-800 border border-slate-700 rounded-2xl px-4 py-4 outline-none"
-            >
-
-              <option value="Safe">
-                Safe
-              </option>
-
-              <option value="Fraud">
-                Fraud
-              </option>
-
-            </select>
+            
 
             <button
               onClick={addTransaction}

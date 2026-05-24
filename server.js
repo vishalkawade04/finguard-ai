@@ -1,3 +1,4 @@
+require("dotenv").config();
 const analyticsRoutes = require("./src/routes/analyticsRoutes");
 const cors = require('cors');
 const express = require('express');

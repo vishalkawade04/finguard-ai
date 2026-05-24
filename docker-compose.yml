@@ -1,16 +1,18 @@
-version: '3.3'
+version: "3"
 
 services:
 
-  app:
+  backend:
+
     build: .
-    container_name: finguard-app
+
+    container_name: finguard-backend
 
     ports:
       - "5000:5000"
 
-    env_file:
-      - .env
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/finguard
 
     depends_on:
       - mongo
@@ -18,7 +20,20 @@ services:
     restart: always
 
 
+  frontend:
+
+    build: ./frontend
+
+    container_name: finguard-frontend
+
+    ports:
+      - "5173:5173"
+
+    restart: always
+
+
   mongo:
+
     image: mongo
 
     container_name: finguard-mongo
@@ -26,11 +41,12 @@ services:
     ports:
       - "27017:27017"
 
-    restart: always
-
     volumes:
       - mongo-data:/data/db
 
+    restart: always
+
 
 volumes:
+
   mongo-data:

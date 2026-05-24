@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import Transactions from "./pages/Transactions";
 import Analytics from "./pages/Analytics";
 
+
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
         {/* PUBLIC ROUTES */}
 
         <Route path="/" element={<Home />} />
+        <Route path="/analytics" element={<Analytics />} />
 
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
