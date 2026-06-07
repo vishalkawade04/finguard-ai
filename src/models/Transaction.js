@@ -22,6 +22,21 @@ const transactionSchema = new mongoose.Schema({
     default: false
   },
 
+  riskScore: {
+    type: Number,
+    default: 0
+  },
+
+  riskLevel: {
+    type: String,
+    default: "Low"
+  },
+
+  riskReason: {
+    type: [String],
+    default: []
+  },
+
   createdAt: {
     type: Date,
     default: Date.now
@@ -29,4 +44,4 @@ const transactionSchema = new mongoose.Schema({
 
 });
 
-module.exports = mongoose.model("Transaction", transactionSchema)
+module.exports = mongoose.model("Transaction", transactionSchema);

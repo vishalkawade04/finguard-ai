@@ -4,3 +4,5 @@ dist
 build
 coverage
 npm-debug.log
+minikube-linux-amd64
+minikube-linux-amd64
