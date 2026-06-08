@@ -19,6 +19,7 @@
     "jsonwebtoken": "^9.0.3",
     "mongodb": "^6.21.0",
     "mongoose": "^8.23.1",
+    "prom-client": "^14.0.0",
     "morgan": "^1.10.1"
   },
   "devDependencies": {

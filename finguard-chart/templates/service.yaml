@@ -4,6 +4,12 @@ metadata:
   name: {{ include "finguard-chart.fullname" . }}
   labels:
     {{- include "finguard-chart.labels" . | nindent 4 }}
+  annotations:
+    {{- if .Values.prometheusScrape.enabled }}
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "{{ .Values.prometheusScrape.port }}"
+    prometheus.io/path: "{{ .Values.prometheusScrape.path }}"
+    {{- end }}
 spec:
   type: {{ .Values.service.type }}
   ports:

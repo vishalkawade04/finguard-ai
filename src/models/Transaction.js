@@ -37,6 +37,11 @@ const transactionSchema = new mongoose.Schema({
     default: []
   },
 
+  explanation: {
+    type: String,
+    default: "This transaction is low risk because no fraud risk rules were triggered."
+  },
+
   createdAt: {
     type: Date,
     default: Date.now

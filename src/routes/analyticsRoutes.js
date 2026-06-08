@@ -2,9 +2,12 @@ const express = require("express");
 
 const router = express.Router();
 
+const authMiddleware = require("../middleware/authMiddleware");
 const Transaction = require("../models/Transaction");
 
-router.get("/", async (req, res) => {
+router.use(authMiddleware);
+
+router.get("/", async (req, res, next) => {
 
   try {
 
@@ -60,13 +63,7 @@ router.get("/", async (req, res) => {
 
   } catch (error) {
 
-    res.status(500).json({
-
-      success: false,
-
-      message: error.message
-
-    });
+    next(error);
 
   }
 

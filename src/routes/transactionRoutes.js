@@ -2,12 +2,18 @@ const express = require("express");
 
 const router = express.Router();
 
+const authMiddleware = require("../middleware/authMiddleware");
+const validateTransaction = require("../middleware/validateTransaction");
 const Transaction = require("../models/Transaction");
 
+const calculateRisk = require("../services/fraudEngine");
+
+
+router.use(authMiddleware);
 
 // GET ALL TRANSACTIONS
 
-router.get("/", async (req, res) => {
+router.get("/", async (req, res, next) => {
 
   try {
 
@@ -16,23 +22,24 @@ router.get("/", async (req, res) => {
         createdAt: -1
       });
 
+    const enrichedTransactions =
+      transactions.map((transaction) => ({
+        ...transaction.toObject(),
+        recommendedAction:
+          calculateRisk.getRecommendedAction(transaction.riskLevel || "Low")
+      }));
+
     res.json({
 
       success: true,
 
-      transactions
+      transactions: enrichedTransactions
 
     });
 
   } catch (error) {
 
-    res.status(500).json({
-
-      success: false,
-
-      message: error.message
-
-    });
+    next(error);
 
   }
 
@@ -41,7 +48,7 @@ router.get("/", async (req, res) => {
 
 // ADD TRANSACTION
 
-router.post("/", async (req, res) => {
+router.post("/", validateTransaction, async (req, res, next) => {
 
   try {
 
@@ -51,56 +58,64 @@ router.post("/", async (req, res) => {
       location
     } = req.body;
 
-    console.log("REQ BODY:", req.body);
+    const amountValue = Number(amount);
+    const normalizedUserId = userId || "Anonymous";
+    const normalizedLocation = String(location || "").trim();
+    const createdAt = new Date();
+    const tenMinutesAgo = new Date(createdAt.getTime() - 10 * 60 * 1000);
+    const twentyFourHoursAgo = new Date(createdAt.getTime() - 24 * 60 * 60 * 1000);
 
-    let isFraud = false;
+    const recentUserTransactions =
+      await Transaction.find({
+        userId: normalizedUserId,
+        createdAt: { $gte: tenMinutesAgo }
+      }).sort({ createdAt: -1 });
 
-const amountValue = Number(amount);
+    const duplicateTransactions =
+      await Transaction.find({
+        userId: normalizedUserId,
+        amount: amountValue,
+        location: normalizedLocation,
+        createdAt: { $gte: twentyFourHoursAgo }
+      }).sort({ createdAt: -1 });
 
-const locationValue =
-  location.toLowerCase().trim();
+    const risk =
+      calculateRisk(
+        {
 
-console.log(amountValue);
-console.log(locationValue);
+        amount: amountValue,
 
-// RULE 1
+        location: normalizedLocation,
 
-if (amountValue >= 10000) {
+        createdAt
 
-  isFraud = true;
+      },
+      {
+        recentUserTransactions,
+        duplicateTransactions
+      });
 
-}
-
-// RULE 2
-
-const riskyLocations = [
-  "russia",
-  "dark web",
-  "unknown"
-];
-
-if (
-  riskyLocations.includes(locationValue)
-) {
-
-  isFraud = true;
-
-}
-
-console.log("FINAL:", isFraud);
-
-    console.log("FINAL RESULT:", isFraud);
+    const isFraud =
+      risk.riskLevel === "High";
 
     const newTransaction =
       new Transaction({
 
-        userId: userId || "Anonymous",
+        userId: normalizedUserId,
 
-        amount: Number(amount),
+        amount: amountValue,
 
-        location,
+        location: normalizedLocation,
 
-        isFraud
+        isFraud,
+
+        riskScore: risk.riskScore,
+
+        riskLevel: risk.riskLevel,
+
+        riskReason: risk.riskReason,
+
+        explanation: risk.explanation
 
       });
 
@@ -110,21 +125,18 @@ console.log("FINAL:", isFraud);
 
       success: true,
 
-      transaction: newTransaction
+      recommendedAction: risk.recommendedAction,
+
+      transaction: {
+        ...newTransaction.toObject(),
+        recommendedAction: risk.recommendedAction
+      }
 
     });
 
   } catch (error) {
 
-    console.log(error);
-
-    res.status(500).json({
-
-      success: false,
-
-      message: error.message
-
-    });
+    next(error);
 
   }
 

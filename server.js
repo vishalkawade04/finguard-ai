@@ -1,4 +1,13 @@
 require("dotenv").config();
+
+const requiredEnv = ["JWT_SECRET", "MONGO_URI"];
+const missingEnv = requiredEnv.filter((key) => !process.env[key]);
+
+if (missingEnv.length) {
+  console.error(`Missing required environment variables: ${missingEnv.join(", ")}`);
+  process.exit(1);
+}
+
 const analyticsRoutes = require("./src/routes/analyticsRoutes");
 const cors = require('cors');
 const express = require('express');
@@ -15,18 +24,37 @@ const transactionRoutes = require('./src/routes/transactionRoutes');
 
 const authRoutes = require('./src/routes/authRoutes');
 
-
 const errorHandler = require('./src/middleware/errorHandler');
+
+const mongoose = require('mongoose');
+
+// Prometheus metrics
+const client = require('prom-client');
+client.collectDefaultMetrics({ timeout: 5000 });
 
 const app = express();
 
 
-// Connect DB
-connectDB();
+// Start server after DB connect
+const startServer = async () => {
+  await connectDB();
 
+  // Middleware
+  app.use(express.json());
 
-// Middleware
-app.use(express.json());
+  // Start listening
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+};
+
+startServer().catch((err) => {
+  console.error('Failed to start server:', err);
+  process.exit(1);
+});
+
+// Note: remaining middleware/routes are already defined above and will be active
 app.use(cors({
   origin: "*"
 }));
@@ -66,12 +94,26 @@ app.get('/', (req, res) => {
     res.send('FinGuard API Running...');
 });
 
-
-// Port
-const PORT = process.env.PORT || 5000;
-
-
-// Start Server
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+// Health endpoint for readiness/liveness checks
+app.get('/health', (req, res) => {
+  const dbState = mongoose.connection.readyState; // 1 = connected
+  const healthy = dbState === 1;
+  res.status(healthy ? 200 : 500).json({
+    status: healthy ? 'ok' : 'error',
+    dbState,
+    uptime: process.uptime()
+  });
 });
+
+// Prometheus metrics
+app.get('/metrics', async (req, res) => {
+  try {
+    res.set('Content-Type', client.register.contentType);
+    res.end(await client.register.metrics());
+  } catch (err) {
+    res.status(500).end(err.message);
+  }
+});
+
+
+// The server is started after database connection completes in startServer().
