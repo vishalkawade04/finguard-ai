@@ -1,17 +1,25 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
+import { getToken, isTokenExpired, logout } from "../utils/auth";
 
 function ProtectedRoute({ children }) {
+  const location = useLocation();
+  const token = getToken();
 
-  const token = localStorage.getItem("token");
+  if (!token || isTokenExpired(token)) {
+    if (token) {
+      logout(false);
+    }
 
-  if (!token) {
-
-    return <Navigate to="/login" />;
-
+    return (
+      <Navigate
+        to="/login"
+        state={{ from: location.pathname }}
+        replace
+      />
+    );
   }
 
   return children;
-
 }
 
 export default ProtectedRoute;

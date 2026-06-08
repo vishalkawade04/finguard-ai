@@ -1,80 +1,122 @@
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { logout } from "../utils/auth";
 
 import {
   FaChartPie,
   FaExchangeAlt,
   FaChartLine,
-  FaSignOutAlt
+  FaSignOutAlt,
+  FaShieldAlt
 } from "react-icons/fa";
 
 function Sidebar() {
-
   const navigate = useNavigate();
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    navigate("/");
+  const navItems = [
+    {
+      label: "Dashboard",
+      to: "/dashboard",
+      icon: <FaChartPie aria-hidden="true" />
+    },
+    {
+      label: "Transactions",
+      to: "/transactions",
+      icon: <FaExchangeAlt aria-hidden="true" />
+    },
+    {
+      label: "Analytics",
+      to: "/analytics",
+      icon: <FaChartLine aria-hidden="true" />
+    }
+  ];
+
+  const handleLogout = () => {
+    logout(false);
+    navigate("/login", { replace: true });
   };
 
   return (
 
-    <div className="fixed left-0 top-0 w-[240px] h-screen bg-slate-950 border-r border-slate-800 p-6">
+    <aside className="sticky top-0 z-30 flex w-full flex-col border-b border-slate-200 bg-white/95 px-4 py-4 shadow-sm backdrop-blur xl:fixed xl:left-0 xl:h-screen xl:w-[280px] xl:border-b-0 xl:border-r xl:px-5 xl:py-6">
 
-      {/* LOGO */}
+      <div className="flex items-center justify-between gap-4 xl:block">
 
-      <div className="mb-12">
+        <button
+          type="button"
+          onClick={() => navigate("/dashboard")}
+          className="flex items-center gap-3 rounded-xl text-left transition hover:opacity-90"
+          aria-label="Go to dashboard"
+        >
+          <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-teal-600 text-white shadow-sm">
+            <FaShieldAlt aria-hidden="true" />
+          </span>
 
-        <h1 className="text-4xl font-extrabold text-cyan-400">
-          FinGuard
-        </h1>
+          <span>
+            <span className="block text-lg font-semibold text-slate-950">
+              FinGuard
+            </span>
 
-        <p className="text-slate-400 mt-2">
-          AI Fraud System
+            <span className="block text-xs font-medium text-slate-500">
+              Fraud intelligence
+            </span>
+          </span>
+        </button>
+
+      </div>
+
+      <nav
+        className="mt-4 flex gap-2 overflow-x-auto pb-1 xl:mt-10 xl:flex-col xl:overflow-visible xl:pb-0"
+        aria-label="Primary navigation"
+      >
+
+        {navItems.map((item) => (
+
+          <NavLink
+            key={item.to}
+            to={item.to}
+            className={({ isActive }) =>
+              `flex min-w-fit items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition ${
+                isActive
+                  ? "bg-slate-950 text-white shadow-sm"
+                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
+              }`
+            }
+          >
+            <span className="text-base">
+              {item.icon}
+            </span>
+
+            {item.label}
+          </NavLink>
+
+        ))}
+
+      </nav>
+
+      <div className="mt-6 hidden rounded-2xl border border-slate-200 bg-slate-50 p-4 xl:block">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+          Monitoring
         </p>
 
+        <p className="mt-2 text-sm font-semibold text-slate-950">
+          AI scoring active
+        </p>
+
+        <p className="mt-1 text-sm leading-6 text-slate-500">
+          Every transaction is evaluated for risk level and explanation.
+        </p>
       </div>
-
-      {/* NAVIGATION */}
-
-      <div className="flex flex-col gap-4">
-
-        <Link
-          to="/dashboard"
-          className="flex items-center gap-3 bg-slate-900 hover:bg-cyan-500/10 border border-slate-800 hover:border-cyan-400 px-5 py-4 rounded-2xl transition duration-300"
-        >
-          <FaChartPie />
-          Dashboard
-        </Link>
-
-        <Link
-          to="/transactions"
-          className="flex items-center gap-3 bg-slate-900 hover:bg-cyan-500/10 border border-slate-800 hover:border-cyan-400 px-5 py-4 rounded-2xl transition duration-300"
-        >
-          <FaExchangeAlt />
-          Transactions
-        </Link>
-
-        <Link
-          to="/analytics"
-          className="flex items-center gap-3 bg-slate-900 hover:bg-cyan-500/10 border border-slate-800 hover:border-cyan-400 px-5 py-4 rounded-2xl transition duration-300"
-        >
-          <FaChartLine />
-          Analytics
-        </Link>
-
-      </div>
-
-      {/* LOGOUT */}
 
       <button
-        onClick={logout}
-        className="absolute bottom-8 left-6 right-6 flex items-center justify-center gap-3 bg-red-500 hover:bg-red-600 py-4 rounded-2xl font-bold transition duration-300"
+        type="button"
+        onClick={handleLogout}
+        className="mt-4 flex items-center justify-center gap-3 rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-600 transition hover:border-red-200 hover:bg-red-50 hover:text-red-700 xl:mt-auto"
       >
-        <FaSignOutAlt />
+        <FaSignOutAlt aria-hidden="true" />
         Logout
       </button>
 
-    </div>
+    </aside>
   );
 }
 

@@ -3,255 +3,270 @@ import { Link } from "react-router-dom";
 import {
   FaShieldAlt,
   FaChartLine,
-  FaRobot,
-  FaLock
+  FaLock,
+  FaArrowRight,
+  FaCheckCircle
 } from "react-icons/fa";
 
 function Home() {
 
+  const metrics = [
+    {
+      label: "Risk rules evaluated",
+      value: "3.8M"
+    },
+    {
+      label: "Median review time",
+      value: "42s"
+    },
+    {
+      label: "Model availability",
+      value: "99.9%"
+    }
+  ];
+
+  const features = [
+    {
+      icon: <FaShieldAlt aria-hidden="true" />,
+      title: "Risk scoring",
+      copy: "Score every transaction with transparent risk levels and analyst-ready explanations."
+    },
+    {
+      icon: <FaChartLine aria-hidden="true" />,
+      title: "Operational analytics",
+      copy: "Track fraud rate, review volume, and transaction health from a focused command center."
+    },
+    {
+      icon: <FaLock aria-hidden="true" />,
+      title: "Enterprise controls",
+      copy: "Built for authenticated workflows, audit-friendly monitoring, and secure review teams."
+    }
+  ];
+
   return (
 
-    <div className="min-h-screen bg-slate-950 text-white overflow-hidden relative">
+    <div className="min-h-screen bg-[#f6f8fb] text-slate-950">
 
-      {/* BACKGROUND GLOW */}
+      <nav className="border-b border-slate-200 bg-white/90 px-5 py-4 backdrop-blur">
 
-      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-cyan-500/20 blur-[150px] rounded-full"></div>
-
-      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-blue-500/20 blur-[150px] rounded-full"></div>
-
-      {/* NAVBAR */}
-
-      <nav className="relative z-10 flex justify-between items-center px-8 py-6 border-b border-slate-800 backdrop-blur-xl">
-
-        <div>
-
-          <h1 className="text-3xl font-extrabold text-cyan-400">
-            FinGuard AI
-          </h1>
-
-        </div>
-
-        <div className="flex gap-4">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
 
           <Link
-            to="/login"
-            className="border border-slate-700 hover:border-cyan-400 px-6 py-3 rounded-2xl font-bold transition duration-300"
+            to="/"
+            className="flex items-center gap-3 rounded-xl"
+            aria-label="FinGuard home"
           >
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-950 text-white">
+              <FaShieldAlt aria-hidden="true" />
+            </span>
 
-            Login
-
+            <span className="text-lg font-semibold">
+              FinGuard
+            </span>
           </Link>
 
-          <Link
-            to="/register"
-            className="bg-cyan-500 hover:bg-cyan-400 text-slate-950 px-6 py-3 rounded-2xl font-bold transition duration-300 shadow-lg shadow-cyan-500/20"
-          >
+          <div className="flex items-center gap-3">
 
-            Register
+            <Link
+              to="/login"
+              className="rounded-xl px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-950"
+            >
+              Log in
+            </Link>
 
-          </Link>
+            <Link
+              to="/register"
+              className="rounded-xl bg-teal-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-700"
+            >
+              Get started
+            </Link>
+
+          </div>
 
         </div>
 
       </nav>
 
-      {/* HERO SECTION */}
+      <main>
 
-      <section className="relative z-10 flex flex-col items-center justify-center text-center px-6 py-28">
-
-        <div className="bg-cyan-500/10 border border-cyan-500/20 px-6 py-3 rounded-full text-cyan-400 mb-8">
-
-          AI-Powered Fraud Detection Platform
-
-        </div>
-
-        <h1 className="text-6xl md:text-7xl font-extrabold leading-tight max-w-5xl">
-
-          Secure Financial Transactions
-          <span className="text-cyan-400">
-            {" "}with AI Intelligence
-          </span>
-
-        </h1>
-
-        <p className="text-slate-400 text-xl max-w-3xl mt-8 leading-relaxed">
-
-          FinGuard AI helps organizations monitor fraudulent activities,
-          detect suspicious transactions, and protect financial systems
-          using intelligent analytics & real-time monitoring.
-
-        </p>
-
-        {/* STATS */}
-
-        <div className="flex gap-10 mt-10 flex-wrap justify-center">
+        <section className="mx-auto grid max-w-7xl items-center gap-12 px-5 py-16 lg:grid-cols-[1fr_0.9fr] lg:py-24">
 
           <div>
 
-            <h2 className="text-4xl font-bold text-cyan-400">
-              99.8%
-            </h2>
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-teal-200 bg-teal-50 px-3 py-1 text-sm font-semibold text-teal-800">
+              <FaCheckCircle aria-hidden="true" />
+              AI fraud operations for fintech teams
+            </div>
 
-            <p className="text-slate-400 mt-2">
-              Fraud Detection Accuracy
+            <h1 className="max-w-4xl text-4xl font-semibold leading-tight tracking-[-0.01em] text-slate-950 md:text-6xl">
+              Transaction risk intelligence for modern financial teams.
+            </h1>
+
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600">
+              FinGuard helps fraud analysts monitor transaction risk, explain suspicious behavior, and act faster with a clean operational workspace.
             </p>
+
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+
+              <Link
+                to="/register"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
+              >
+                Create workspace
+                <FaArrowRight aria-hidden="true" />
+              </Link>
+
+              <Link
+                to="/login"
+                className="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-400 hover:text-slate-950"
+              >
+                Sign in
+              </Link>
+
+            </div>
+
+            <dl className="mt-10 grid max-w-2xl grid-cols-1 gap-4 sm:grid-cols-3">
+
+              {metrics.map((metric) => (
+
+                <div
+                  key={metric.label}
+                  className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"
+                >
+                  <dt className="text-sm text-slate-500">
+                    {metric.label}
+                  </dt>
+
+                  <dd className="mt-2 text-2xl font-semibold text-slate-950">
+                    {metric.value}
+                  </dd>
+                </div>
+
+              ))}
+
+            </dl>
 
           </div>
 
-          <div>
+          <div className="rounded-[2rem] border border-slate-200 bg-white p-4 shadow-xl shadow-slate-200/70">
 
-            <h2 className="text-4xl font-bold text-green-400">
-              24/7
-            </h2>
+            <div className="rounded-3xl border border-slate-200 bg-slate-950 p-5 text-white">
 
-            <p className="text-slate-400 mt-2">
-              Real-Time Monitoring
-            </p>
+              <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                <div>
+                  <p className="text-sm text-slate-400">
+                    Risk operations
+                  </p>
+
+                  <h2 className="mt-1 text-xl font-semibold">
+                    Live review queue
+                  </h2>
+                </div>
+
+                <span className="rounded-full bg-emerald-400/10 px-3 py-1 text-xs font-semibold text-emerald-300">
+                  Healthy
+                </span>
+              </div>
+
+              <div className="mt-5 space-y-3">
+
+                {[
+                  ["ACH transfer", "$128,440", "High", "98"],
+                  ["Card payment", "$4,210", "Low", "12"],
+                  ["Wire transfer", "$78,900", "Medium", "56"]
+                ].map(([name, amount, level, score]) => (
+
+                  <div
+                    key={name}
+                    className="grid grid-cols-[1fr_auto] gap-3 rounded-2xl bg-white/5 p-4"
+                  >
+                    <div>
+                      <p className="font-semibold">
+                        {name}
+                      </p>
+
+                      <p className="mt-1 text-sm text-slate-400">
+                        {amount} transaction under review
+                      </p>
+                    </div>
+
+                    <div className="text-right">
+                      <p className="text-sm font-semibold text-teal-300">
+                        {score}
+                      </p>
+
+                      <p className="mt-1 text-xs text-slate-400">
+                        {level}
+                      </p>
+                    </div>
+                  </div>
+
+                ))}
+
+              </div>
+
+            </div>
 
           </div>
 
-          <div>
+        </section>
 
-            <h2 className="text-4xl font-bold text-purple-400">
-              1M+
-            </h2>
+        <section className="border-t border-slate-200 bg-white px-5 py-16">
 
-            <p className="text-slate-400 mt-2">
-              Transactions Analyzed
-            </p>
+          <div className="mx-auto max-w-7xl">
+
+            <div className="max-w-2xl">
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-teal-700">
+                Platform
+              </p>
+
+              <h2 className="mt-3 text-3xl font-semibold text-slate-950">
+                Built for operational clarity.
+              </h2>
+            </div>
+
+            <div className="mt-8 grid gap-5 md:grid-cols-3">
+
+              {features.map((feature) => (
+
+                <article
+                  key={feature.title}
+                  className="rounded-2xl border border-slate-200 bg-slate-50 p-6"
+                >
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-teal-700 shadow-sm">
+                    {feature.icon}
+                  </div>
+
+                  <h3 className="mt-5 text-lg font-semibold text-slate-950">
+                    {feature.title}
+                  </h3>
+
+                  <p className="mt-3 leading-7 text-slate-600">
+                    {feature.copy}
+                  </p>
+                </article>
+
+              ))}
+
+            </div>
 
           </div>
 
-        </div>
+        </section>
 
-        {/* BUTTONS */}
+      </main>
 
-        <div className="flex gap-6 mt-12 flex-wrap justify-center">
+      <footer className="border-t border-slate-200 bg-white px-5 py-8">
 
-          <Link
-            to="/register"
-            className="bg-cyan-500 hover:bg-cyan-400 text-slate-950 px-8 py-4 rounded-2xl text-lg font-bold transition duration-300 shadow-lg shadow-cyan-500/20"
-          >
-
-            Start Free Trial
-
-          </Link>
-
-          <Link
-            to="/dashboard"
-            className="border border-slate-700 hover:border-cyan-400 px-8 py-4 rounded-2xl text-lg font-bold transition duration-300"
-          >
-
-            Live Demo
-
-          </Link>
-
-        </div>
-
-      </section>
-
-      {/* FEATURES */}
-
-      <section className="relative z-10 px-8 pb-24">
-
-        <div className="max-w-7xl mx-auto mb-16 text-center">
-
-          <h2 className="text-5xl font-bold mb-6">
-            Enterprise Fraud Protection
-          </h2>
-
-          <p className="text-slate-400 text-xl max-w-3xl mx-auto">
-
-            AI-driven monitoring, intelligent analytics, and secure
-            transaction protection built for modern fintech systems.
-
+        <div className="mx-auto flex max-w-7xl flex-col gap-2 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+          <p>
+            © 2026 FinGuard. Fraud intelligence for financial operations.
           </p>
 
+          <p>
+            Built for US fintech teams.
+          </p>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
-
-          {/* CARD 1 */}
-
-          <div className="bg-white/5 border border-white/10 backdrop-blur-xl rounded-3xl p-8 hover:scale-105 transition duration-300">
-
-            <FaShieldAlt className="text-cyan-400 text-5xl mb-6" />
-
-            <h2 className="text-2xl font-bold mb-4">
-              Fraud Detection
-            </h2>
-
-            <p className="text-slate-400 leading-relaxed">
-
-              Detect suspicious activities instantly using intelligent AI models.
-
-            </p>
-
-          </div>
-
-          {/* CARD 2 */}
-
-          <div className="bg-white/5 border border-white/10 backdrop-blur-xl rounded-3xl p-8 hover:scale-105 transition duration-300">
-
-            <FaChartLine className="text-green-400 text-5xl mb-6" />
-
-            <h2 className="text-2xl font-bold mb-4">
-              Real-Time Analytics
-            </h2>
-
-            <p className="text-slate-400 leading-relaxed">
-
-              Monitor transactions and fraud trends with live analytics dashboards.
-
-            </p>
-
-          </div>
-
-          {/* CARD 3 */}
-
-          <div className="bg-white/5 border border-white/10 backdrop-blur-xl rounded-3xl p-8 hover:scale-105 transition duration-300">
-
-            <FaRobot className="text-purple-400 text-5xl mb-6" />
-
-            <h2 className="text-2xl font-bold mb-4">
-              AI Intelligence
-            </h2>
-
-            <p className="text-slate-400 leading-relaxed">
-
-              Leverage machine learning models for smarter fraud prediction.
-
-            </p>
-
-          </div>
-
-          {/* CARD 4 */}
-
-          <div className="bg-white/5 border border-white/10 backdrop-blur-xl rounded-3xl p-8 hover:scale-105 transition duration-300">
-
-            <FaLock className="text-red-400 text-5xl mb-6" />
-
-            <h2 className="text-2xl font-bold mb-4">
-              Secure Platform
-            </h2>
-
-            <p className="text-slate-400 leading-relaxed">
-
-              Enterprise-grade authentication and secure transaction monitoring.
-
-            </p>
-
-          </div>
-
-        </div>
-
-      </section>
-
-      {/* FOOTER */}
-
-      <footer className="relative z-10 border-t border-slate-800 py-8 text-center text-slate-500">
-
-        © 2026 FinGuard AI • Secure Fintech Intelligence Platform
 
       </footer>
 
