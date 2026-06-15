@@ -8,6 +8,10 @@ const registerUser = async (req, res) => {
 
         const { username, email, password } = req.body;
 
+        if (!username || !email || !password) {
+            return res.status(400).json({ success: false, message: 'username, email and password are required' });
+        }
+
         const existingUser = await User.findOne({ email });
 
         if (existingUser) {
@@ -27,19 +31,9 @@ const registerUser = async (req, res) => {
 
         await user.save();
 
-       const token = jwt.sign(
-    {
-        id: user._id,
-        role: user.role
-    },
-    process.env.JWT_SECRET,
-    { expiresIn: '1d' }
-);
+        const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
-res.status(201).json({
-    success: true,
-    token
-});
+        res.status(201).json({ success: true, token });
 
     } catch (error) {
 
@@ -58,6 +52,10 @@ const loginUser = async (req, res) => {
 
         const { email, password } = req.body;
 
+        if (!email || !password) {
+            return res.status(400).json({ success: false, message: 'email and password are required' });
+        }
+
         const user = await User.findOne({ email });
 
         if (!user) {
@@ -70,26 +68,11 @@ const loginUser = async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
 
         if (!isMatch) {
-            return res.status(400).json({
-                success: false,
-                message: 'Invalid credentials'
-            });
+            return res.status(400).json({ success: false, message: 'Invalid credentials' });
         }
-        console.log(user);
-        console.log(user.role);
-        const token = jwt.sign(
-            {
-                id: user._id,
-                role: user.role
-            },
-            process.env.JWT_SECRET,
-            { expiresIn: '1d' }
-        );
+        const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
-        res.status(200).json({
-            success: true,
-            token
-        });
+        res.status(200).json({ success: true, token });
 
     } catch (error) {
 

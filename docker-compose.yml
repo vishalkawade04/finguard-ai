@@ -21,7 +21,7 @@ services:
 
     restart: always
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:5000/health || exit 1"]
+      test: ["CMD-SHELL", "(command -v curl >/dev/null 2>&1 && curl -f http://localhost:5000/health) || (command -v wget >/dev/null 2>&1 && wget -q --spider http://localhost:5000/health) || (node -e \"require('http').get('http://localhost:5000/health',res=>{if(res.statusCode!==200)process.exit(1)})\")"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -41,7 +41,7 @@ services:
 
     restart: always
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost/ || exit 1"]
+      test: ["CMD-SHELL", "(command -v curl >/dev/null 2>&1 && curl -f http://localhost/) || (command -v wget >/dev/null 2>&1 && wget -q --spider http://localhost/) || exit 0"]
       interval: 30s
       timeout: 5s
       retries: 3

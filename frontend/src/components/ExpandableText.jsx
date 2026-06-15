@@ -4,7 +4,12 @@ function ExpandableText({ text = '', maxLength = 96 }) {
   const [expanded, setExpanded] = useState(false);
 
   if (!text) {
-    return <span className="text-sm text-slate-500">No explanation available.</span>;
+    return (
+      <div className="text-sm text-slate-500">
+        <div className="mb-2 h-3 w-36 rounded bg-slate-100" />
+        <div className="h-3 w-24 rounded bg-slate-100" />
+      </div>
+    );
   }
 
   const shouldTruncate = text.length > maxLength;

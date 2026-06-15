@@ -216,7 +216,41 @@ function Transactions() {
           )}
 
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[1100px] border-separate border-spacing-0 text-left text-sm">
+            {/* Mobile list */}
+            <div className="space-y-4 lg:hidden">
+              {isLoading && [1,2,3].map(i => (
+                <div key={i} className="animate-pulse rounded-2xl border border-slate-200 bg-white p-4" />
+              ))}
+
+              {!isLoading && filteredTransactions.map((item) => (
+                <article key={item._id || `${item.userId}-${item.createdAt}`} className="rounded-2xl border border-slate-200 bg-white p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="font-semibold text-slate-950">{item.userId || 'Unknown'}</p>
+                      <p className="mt-1 text-xs text-slate-500">{formatDate(item.createdAt)}</p>
+                      <p className="mt-2 text-sm text-slate-600">{item.location || 'Unknown'}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-lg font-semibold text-slate-950">{formatCurrency(item.amount)}</p>
+                      <div className="mt-2"> <Badge text={item.riskLevel || 'Low'} variant={item.riskLevel || 'Low'} /> </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-3 text-sm text-slate-600">
+                    <ExpandableText text={item.explanation} />
+                  </div>
+                </article>
+              ))}
+
+              {!isLoading && filteredTransactions.length === 0 && (
+                <div className="rounded-2xl border border-slate-200 bg-white p-6 text-center">
+                  <p className="text-sm text-slate-500">No transactions match your search.</p>
+                </div>
+              )}
+            </div>
+
+            {/* Desktop table */}
+            <table className="hidden lg:table w-full min-w-[900px] border-separate border-spacing-0 text-left text-sm">
               <thead className="bg-slate-50 text-xs font-semibold uppercase tracking-[0.08em] text-slate-500">
                 <tr>
                   <th className="px-5 py-4">User</th>

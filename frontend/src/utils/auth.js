@@ -38,7 +38,8 @@ export const getTokenPayload = (token) => {
 
 export const isTokenExpired = (token) => {
   const payload = getTokenPayload(token);
-  if (!payload || typeof payload.exp !== 'number') return false;
+  // If payload is missing or malformed, treat token as expired for safety
+  if (!payload || typeof payload.exp !== 'number') return true;
   return Date.now() >= payload.exp * 1000;
 };
 

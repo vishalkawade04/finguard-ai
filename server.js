@@ -33,31 +33,9 @@ const client = require('prom-client');
 client.collectDefaultMetrics({ timeout: 5000 });
 
 const app = express();
-
-
-// Start server after DB connect
-const startServer = async () => {
-  await connectDB();
-
-  // Middleware
-  app.use(express.json());
-
-  // Start listening
-  const PORT = process.env.PORT || 5000;
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
-};
-
-startServer().catch((err) => {
-  console.error('Failed to start server:', err);
-  process.exit(1);
-});
-
-// Note: remaining middleware/routes are already defined above and will be active
-app.use(cors({
-  origin: "*"
-}));
+// Register common middleware before DB connect/start
+app.use(express.json());
+app.use(cors({ origin: '*' }));
 
 // Security Headers
 app.use(helmet());
@@ -115,5 +93,25 @@ app.get('/metrics', async (req, res) => {
   }
 });
 
+// Start server after DB connect
+const startServer = async () => {
+  try {
+    await connectDB();
 
-// The server is started after database connection completes in startServer().
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error('Failed to start server:', err);
+    process.exit(1);
+  }
+};
+
+// Start the server only when this file is executed directly (not when imported by tests)
+if (require.main === module) {
+  startServer();
+}
+
+// Export app for testing
+module.exports = app;

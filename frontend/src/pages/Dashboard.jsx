@@ -51,15 +51,17 @@ function Dashboard() {
   const recentTransactions = transactions.slice(0, 5);
 
   const chartOptions = {
-    chart: { toolbar: { show: false }, background: "transparent", fontFamily: "Inter, sans-serif" },
-    colors: ["#14b8a6", "#f59e0b", "#ef4444"],
+    chart: { toolbar: { show: false }, background: 'transparent', fontFamily: 'Inter, sans-serif' },
+    colors: ['#10b981', '#f59e0b', '#ef4444'],
     dataLabels: { enabled: false },
-    grid: { borderColor: "#e2e8f0" },
+    grid: { borderColor: '#e6eef6', strokeDashArray: 4 },
     legend: { show: false },
-    plotOptions: { bar: { borderRadius: 10, columnWidth: "55%" } },
-    theme: { mode: "light" },
-    xaxis: { categories: ["Low", "Medium", "High"], labels: { style: { colors: "#64748b" } } },
-    yaxis: { labels: { style: { colors: "#64748b" } } }
+    plotOptions: { bar: { borderRadius: 12, columnWidth: '48%' } },
+    theme: { mode: 'light' },
+    fill: { type: 'gradient', gradient: { shade: 'light', type: 'vertical', shadeIntensity: 0.4, gradientToColors: ['#34d399', '#fbbf24', '#f87171'], opacityFrom: 0.9, opacityTo: 0.8 } },
+    tooltip: { theme: 'light', x: { show: false }, y: { formatter: (val) => `${val} transactions` } },
+    xaxis: { categories: ['Low', 'Medium', 'High'], labels: { style: { colors: '#64748b' } } },
+    yaxis: { labels: { style: { colors: '#64748b' }, formatter: (val) => Math.round(val) } }
   };
 
   const chartSeries = [{ name: "Transactions", data: riskBuckets }];

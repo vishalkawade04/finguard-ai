@@ -35,7 +35,6 @@ function Login() {
 
       setError("Invalid email or password");
 
-      console.log(error);
 
     }
 
